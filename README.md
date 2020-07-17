@@ -1,1 +1,1 @@
-# Nightmare Zone Bot for use of cunts like syed and zain only.
+# Nightmare Zone Bot for use by cunts like syed and zain only
