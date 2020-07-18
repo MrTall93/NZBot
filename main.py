@@ -51,8 +51,23 @@ def flick_prayer(prayer):
     time.sleep(random.uniform(0.2,0.5))
     pyautogui.click()
 
-def overload(overloads_drank):
-    
+def overload(overloads_drank, config, x_distance, y_distance):
+    if overloads_drank >= 15:
+        exit()
+    elif overloads_drank <= 3:
+        pyautogui.moveTo(config['first'][0], config['first'][1], duration=random.uniform(0.5, 1))
+        pyautogui.click()
+    elif overloads_drank <= 7:
+        pyautogui.moveTo(config['first'][0] + x_distance, config['first'][1], duration=random.uniform(0.5, 1))
+        pyautogui.click()
+    elif overloads_drank <= 11:
+        pyautogui.moveTo(config['first'][0] + 2*x_distance, config['first'][1], duration=random.uniform(0.5, 1))
+        pyautogui.click()
+    else:
+        pyautogui.moveTo(config['first'][0] + 3* x_distance, config['first'][1], duration=random.uniform(0.5, 1))
+        pyautogui.click()
+
+    return overloads_drank + 1
 
 if __name__ == "__main__":
 
@@ -64,11 +79,29 @@ if __name__ == "__main__":
     prayer_location = [config['first'][0] - x_distance/2,config['first'][1] - 3.7*y_distance]
 
     #Counters
-    overloads_drank = 0
+    overloads_drank = 5
     absorbtion_drank = 0
-    runs = 0
-
+    runs = 1
 
     flick_prayer(prayer_location)
+    overloads_drank = overload(overloads_drank, config, x_distance, y_distance)
+
+    overload_time = time.time()
+
+    x = time.time() - overload_time
+
+    while True:
+        if runs % 5 == 0:
+            flick_prayer(prayer_location)
+            time.sleep(random.uniform(300 - (time.time() - overload_time) + 3, 300 - (time.time() - overload_time) + 10))
+            overloads_drank = overload(overloads_drank, config, x_distance, y_distance)
+            overload_time = time.time()
+            flick_prayer(prayer_location)
+        else:
+            time.sleep(random.uniform(50,57))
+            flick_prayer(prayer_location)
+
+
+
 
 
