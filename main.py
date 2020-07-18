@@ -55,8 +55,12 @@ def flick_prayer(prayer):
     pyautogui.click()
 
 def overload(overloads_drank, config, x_distance, y_distance):
-    config['first'][1] = config['first'][1] + random.uniform(-y_distance / 4, y_distance / 4)
-    config['first'][0] = config['first'][0] + random.uniform(-x_distance/4,x_distance/4)
+    
+    # we change the cordinations slightly so we don't click in the same place every time
+    config['first'][1] = config['first'][1] + random.uniform(-y_distance/5, y_distance/5)
+    config['first'][0] = config['first'][0] + random.uniform(-x_distance/5,x_distance/5)
+    
+    # Stop the app after 15 runs
     if overloads_drank >= 15:
         exit()
     elif overloads_drank <= 3:
@@ -75,11 +79,12 @@ def overload(overloads_drank, config, x_distance, y_distance):
     return overloads_drank + 1
 
 
-
 if __name__ == "__main__":
+    # Lets us use the x_distances by functions
     global x_distance
     global y_distance
 
+    # Load the configuration - where is rs on the screen
     config = initalize()
 
     # Calculated variables from config
@@ -91,14 +96,17 @@ if __name__ == "__main__":
     overloads_drank = 0
     absorbtion_drank = 0
     runs = 1
-
+    
+    # flick prayer
     flick_prayer(prayer_location)
+    
+    # drink overload
     overloads_drank = overload(overloads_drank, config, x_distance, y_distance)
 
+    # drink the first overload
     overload_time = time.time()
-
-    x = time.time() - overload_time
-
+    
+    # Start the program
     while True:
         if runs % 5 == 0:
             # stop for 50-57 secs
