@@ -17,34 +17,56 @@ def countdown(t):
 def initalize():
     if path.exists("config.txt"):
         config = json.load(open('config.txt','rb'))
+
+
         return config
 
     else:
         config = {}
         print("Couldn't find configure file")
+
+
         print("Please follow the commands, you will only have 5 seconds to do the action.")
-        time.sleep(5)
+        time.sleep(3)
         print('Please move the cursor to the most top left item in your inventory.')
         time.sleep(2)
         countdown(5)
         config['first'] = pyautogui.position()
-        print('Thank you, Just 2 more to go.')
-        time.sleep(3)
+
+
+        print('Thank you, Just 3 more to go.')
+        time.sleep(2)
         print('Please move the cursor to the second item in your inventory.')
         time.sleep(2)
         countdown(5)
         config['second'] = pyautogui.position()
-        print('Thank you, last one.')
-        time.sleep(3)
+
+        print('Thank you, 2 more to go.')
+        time.sleep(2)
         print('Please move the cursor to the item below of the first one.')
         time.sleep(2)
         countdown(5)
         config['third'] = pyautogui.position()
 
+        print('Thank you, last one.')
+        time.sleep(3)
+        print('Please move the cursor to the quick prayer next to minimap.')
+        time.sleep(2)
+        countdown(5)
+        config['prayer'] = pyautogui.position()
+
+
+
+
+
         print('Configuration finished, File "config.txt" created - delete if you want to reconfigure')
+
+        print('Please enter NZ and restart the script.')
 
         with open('config.txt', 'w') as outfile:
             json.dump(config, outfile)
+
+        exit()
         return config
 
 
@@ -55,12 +77,8 @@ def flick_prayer(prayer):
     pyautogui.click()
 
 def overload(overloads_drank, config, x_distance, y_distance):
-    
-    # we change the cordinations slightly so we don't click in the same place every time
-    config['first'][1] = config['first'][1] + random.uniform(-y_distance/5, y_distance/5)
-    config['first'][0] = config['first'][0] + random.uniform(-x_distance/5,x_distance/5)
-    
-    # Stop the app after 15 runs
+    config['first'][1] = config['first'][1] + random.uniform(-y_distance/6, y_distance/6)
+    config['first'][0] = config['first'][0] + random.uniform(-x_distance/6, x_distance/6)
     if overloads_drank >= 15:
         exit()
     elif overloads_drank <= 3:
@@ -79,34 +97,30 @@ def overload(overloads_drank, config, x_distance, y_distance):
     return overloads_drank + 1
 
 
+
 if __name__ == "__main__":
-    # Lets us use the x_distances by functions
     global x_distance
     global y_distance
 
-    # Load the configuration - where is rs on the screen
     config = initalize()
 
     # Calculated variables from config
     x_distance = config['second'][0] - config['first'][0]
     y_distance = config['third'][1] - config['first'][1]
-    prayer_location = [config['first'][0] - x_distance/2,config['first'][1] - 3.7*y_distance]
+    prayer_location = config['prayer']
 
     #Counters
     overloads_drank = 0
     absorbtion_drank = 0
     runs = 1
-    
-    # flick prayer
+
     flick_prayer(prayer_location)
-    
-    # drink overload
     overloads_drank = overload(overloads_drank, config, x_distance, y_distance)
 
-    # drink the first overload
     overload_time = time.time()
-    
-    # Start the program
+
+    x = time.time() - overload_time
+
     while True:
         if runs % 5 == 0:
             # stop for 50-57 secs
