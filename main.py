@@ -5,12 +5,15 @@ import time
 import json
 import random
 
+
 def countdown(t):
     while t > 0:
         print(t)
         t -= 1
         time.sleep(1)
 
+
+# This is used to find out where's what and save them into a config file - moving rs will break this.
 def initalize():
     if path.exists("config.txt"):
         config = json.load(open('config.txt','rb'))
@@ -46,12 +49,14 @@ def initalize():
 
 
 def flick_prayer(prayer):
-    pyautogui.moveTo(prayer[0],prayer[1],duration=random.uniform(0.5,1))
+    pyautogui.moveTo(prayer[0] + random.uniform(-x_distance/4,x_distance/4),prayer[1] + random.uniform(-y_distance/4,y_distance/4),duration=random.uniform(0.5,1))
     pyautogui.click()
     time.sleep(random.uniform(0.2,0.5))
     pyautogui.click()
 
 def overload(overloads_drank, config, x_distance, y_distance):
+    config['first'][1] = config['first'][1] + random.uniform(-y_distance / 4, y_distance / 4)
+    config['first'][0] = config['first'][0] + random.uniform(-x_distance/4,x_distance/4)
     if overloads_drank >= 15:
         exit()
     elif overloads_drank <= 3:
@@ -69,7 +74,11 @@ def overload(overloads_drank, config, x_distance, y_distance):
 
     return overloads_drank + 1
 
+
+
 if __name__ == "__main__":
+    global x_distance
+    global y_distance
 
     config = initalize()
 
@@ -79,7 +88,7 @@ if __name__ == "__main__":
     prayer_location = [config['first'][0] - x_distance/2,config['first'][1] - 3.7*y_distance]
 
     #Counters
-    overloads_drank = 5
+    overloads_drank = 0
     absorbtion_drank = 0
     runs = 1
 
@@ -92,14 +101,36 @@ if __name__ == "__main__":
 
     while True:
         if runs % 5 == 0:
+            # stop for 50-57 secs
+            time.sleep(random.uniform(50, 57))
+
+            # resets the hp to 1
             flick_prayer(prayer_location)
-            time.sleep(random.uniform(300 - (time.time() - overload_time) + 3, 300 - (time.time() - overload_time) + 10))
+
+            # find out how long left for overload to wear off and sleep for that time (add 3-7 secs randomly)
+            time.sleep(random.uniform(300 - (time.time() - overload_time) + 3, 300 - (time.time() - overload_time) + 7))
+
+            # drink overload
             overloads_drank = overload(overloads_drank, config, x_distance, y_distance)
+
+            # save the time when you drank overload
             overload_time = time.time()
+
+            # flick the prayer to reset hp to 1
             flick_prayer(prayer_location)
+
+            # Increase the runs by 1
+            runs += 1
         else:
-            time.sleep(random.uniform(50,57))
+            # stop for 50-57 secs
+            time.sleep(random.uniform(50,55))
+
+            # flick the prayer
             flick_prayer(prayer_location)
+
+
+            # Increase the runs by 1
+            runs += 1
 
 
 
